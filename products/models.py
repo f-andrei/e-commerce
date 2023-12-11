@@ -2,31 +2,41 @@ from django.db import models
 from PIL import Image
 import os
 from django.conf import settings
-
+from django.utils.text import slugify
+from random import randint
 # Create your models here.
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=255)
-    short_description = models.TextField(max_length=255)
+    name = models.CharField(max_length=255, verbose_name='Nome')
+    short_description = models.TextField(max_length=255, verbose_name='Descrição')
     long_description = models.TextField()
     image = models.ImageField(
         upload_to='product_images/%Y%m/',
         blank=False,
         null=False
         )
-    slug = models.SlugField(unique=True)
-    marketing_price = models.FloatField()
-    marketing_promotional_price = models.FloatField(default=0)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+    marketing_price = models.FloatField(verbose_name='Preço')
+    marketing_promotional_price = models.FloatField(default=0, verbose_name='Preço promocional')
     type = models.CharField(
         default='V',
         max_length=1,
         choices=(
-            ('V', 'Variation'),
+            ('V', 'Variable'),
             ('S', 'Simple'),
         )
     )
 
+    def get_formatted_price(self):
+        return f'R$: {self.marketing_price:.2f}'.replace('.', ',')
+    
+    get_formatted_price.short_description = 'Preço'
+    
+    def get_formatted_promotional_price(self):
+        return f'R$: {self.marketing_promotional_price:.2f}'.replace('.', ',')
+    
+    get_formatted_promotional_price.short_description = 'Preço Promocional'
 
     @staticmethod
     def resize_image(img, new_width=800):
@@ -48,6 +58,10 @@ class Product(models.Model):
 
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            slug = f'{slugify(self.name)}-{randint(1, 100) + randint(1, 9)}'
+            self.slug = slug
+
         super().save(*args, **kwargs)
 
         max_size = 800
@@ -58,17 +72,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-
-
-"""
-        Variacao:
-            nome - Char
-            produto - FK Produto
-            preco - Float
-            preco_promocional - Float
-            estoque - Int
-
-"""
 
 class Variation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
