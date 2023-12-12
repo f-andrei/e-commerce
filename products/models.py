@@ -4,6 +4,7 @@ import os
 from django.conf import settings
 from django.utils.text import slugify
 from random import randint
+from utils import utils
 # Create your models here.
 
 
@@ -29,13 +30,11 @@ class Product(models.Model):
     )
 
     def get_formatted_price(self):
-        return f'R$: {self.marketing_price:.2f}'.replace('.', ',')
-    
+        return utils.format_price(self.marketing_price)
     get_formatted_price.short_description = 'Preço'
     
     def get_formatted_promotional_price(self):
-        return f'R$: {self.marketing_promotional_price:.2f}'.replace('.', ',')
-    
+        return utils.format_price(self.marketing_promotional_price)
     get_formatted_promotional_price.short_description = 'Preço Promocional'
 
     @staticmethod
