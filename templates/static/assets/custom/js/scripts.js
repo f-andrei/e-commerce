@@ -1,25 +1,31 @@
 (function () {
-    select_variacao = document.getElementById('select-variacoes');
-    variation_preco = document.getElementById('variation-preco');
-    variation_preco_promocional = document.getElementById('variation-preco-promocional');
+    console.log('Hello, this message will be printed in the console!');
 
-    if (!select_variacao) {
+    select_variations = document.getElementById('select-variations');
+    variation_price = document.getElementById('variation-price');
+    variation_price_promotional = document.getElementById('variation-price-promotional');
+
+    if (!select_variations) {
         return;
     }
 
-    if (!variation_preco) {
+    if (!variation_price) {
         return;
     }
 
-    select_variacao.addEventListener('change', function () {
-        preco = this.options[this.selectedIndex].getAttribute('data-preco');
-        preco_promocional = this.options[this.selectedIndex].getAttribute('data-preco-promocional');
+    select_variations.addEventListener('change', function () {
+        price = this.options[this.selectedIndex].getAttribute('data-price');
+        price_promotional = this.options[this.selectedIndex].getAttribute('data-price-promotional');
 
-        variation_preco.innerHTML = preco;
-
-        if (variation_preco_promocional) {
-            variation_preco_promocional.innerHTML = preco_promocional;
+        if (price) {
+            variation_price.innerHTML = price;
         }
-    })
-})();
 
+        if (price_promotional) {
+            variation_price_promotional.innerHTML = price_promotional;
+        } else {
+            variation_price_promotional.innerHTML = price;
+            // variation_price.innerHTML = ''; // Optionally clear variation_price if price_promotional doesn't exist
+        }
+    });
+})();

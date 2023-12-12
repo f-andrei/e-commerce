@@ -35,7 +35,7 @@ class Product(models.Model):
     
     def get_formatted_promotional_price(self):
         return utils.format_price(self.marketing_promotional_price)
-    get_formatted_promotional_price.short_description = 'Preço Promocional'
+    get_formatted_promotional_price.short_description = 'Preço promocional'
 
     @staticmethod
     def resize_image(img, new_width=800):
