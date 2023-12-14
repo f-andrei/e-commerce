@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, resolve_url, get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views import View
 from django.http import HttpResponse
+from django.contrib import messages
 from . import models
+from pprint import pprint
 
 # Create your views here.
 
@@ -23,20 +25,136 @@ class ProductDetails(DetailView):
 
 class AddToCart(View):
     def get(self, *args, **kwargs):
-        return HttpResponse('Adicionar ao carrinho')
+        http_referer = self.request.META.get(
+            'HTTP_REFERER',
+            resolve_url('products:list')
+            )
+        variation_id = self.request.GET.get('vid')
+
+        if not variation_id:
+            messages.error(
+                self.request,
+                'Product not found.'
+            )
+            return redirect(http_referer)
+        
+        variation = get_object_or_404(models.Variation, id=variation_id)
+
+        variation_inventory = variation.inventory
+
+        product = variation.product
+        product_id = product.id
+        product_name = product.name
+        variation_name = variation.name or ''
+        variation_id = variation_id
+        unit_price = variation.price
+        promotional_unit_price = variation.promotional_price
+        quantity = 1
+        slug = product.slug
+        image = product.image
+
+        if image:
+            image = image.name
+        
+
+        if variation.inventory < 1:
+            messages.error(
+                self.request,
+                'Out of stock.'
+            )
+            return redirect(http_referer)
+
+        if not self.request.session.get('cart'):
+            self.request.session['cart'] = {}
+            self.request.session.save()
+
+        cart = self.request.session['cart']
+        
+        if variation_id in cart:
+            cart_total_items = cart[variation_id]['quantity']
+            cart_total_items += 1
+
+            if variation_inventory < cart_total_items:
+                messages.warning(
+                    self.request,
+                    f"Unfortunately, we only had {variation_inventory} " \
+                    "of your chosen item remaining. " \
+                    "We've added them all to your cart. " \
+                    "Would you like to browse other options?"
+                )
+                cart_total_items = variation_inventory
+
+
+            cart[variation_id]['quantity'] = cart_total_items
+            cart[variation_id]['quantity_price'] = unit_price * cart_total_items
+            cart[variation_id]['promotional_quantity_price'] = \
+                promotional_unit_price * cart_total_items
+        else:
+            cart[variation_id] = {
+                'product_id': product_id,
+                'product_name': product_name,
+                'variation_name': variation_name,
+                'variation_id': variation_id,
+                'unit_price': unit_price,
+                'promotional_unit_price': promotional_unit_price,
+                'quantity_price': unit_price,
+                'promotional_quantity_price': promotional_unit_price,
+                'quantity': 1,
+                'slug': slug,
+                'image': image,
+                }
+
+        self.request.session.save()
+
+        messages.success(
+            self.request,
+            f"Product {product_name} {variation_name} successfully added to cart "
+            f"{cart[variation_id]['quantity']}x."
+            
+        )
+
+        return redirect(http_referer)
 
 
 class RemoveFromCart(View):
     def get(self, *args, **kwargs):
-        return HttpResponse('Remover do carrinho')
+        http_referer = self.request.META.get(
+            'HTTP_REFERER',
+            resolve_url('products:list')
+            )
+        variation_id = self.request.GET.get('vid')
+        if not variation_id:
+            return redirect(http_referer)
+        
+        if not self.request.session.get('cart'):
+            return redirect(http_referer)
+        
+        if variation_id not in self.request.session['cart']:
+            return redirect(http_referer)
+        
+        cart = self.request.session['cart'][variation_id]
+
+        messages.success(
+            self.request,
+            f"Product {cart['product_name']} {cart['variation_name']} " \
+            f"removed from your cart."
+        )
+        
+        del self.request.session['cart'][variation_id]
+        self.request.session.save()
+    
+        return redirect(http_referer)
 
 
-class Cart(ListView):
+class Cart(View):
     def get(self, *args, **kwargs):
-        return HttpResponse('Carrinho')
+        context = {
+            'cart': self.request.session.get('cart', {})
+        }
+        return render(self.request, 'product/cart.html', context)
 
 
-class Finish(ListView):
+class Overview(ListView):
     def get(self, *args, **kwargs):
         return HttpResponse('Finalizar')
 

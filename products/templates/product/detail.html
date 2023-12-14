@@ -19,7 +19,7 @@
             <h1 class="h2">{{ product.name }}</h1>
             <p class="lead">{{ product.short_description }}</p>
             <p class="lead">
-                {% if product.marketing_promotional_price %}
+                {% if product.marketing_promotional_price > 0 %}
                     <span id="variation-price-promotional" class="lead product-price">{{ product.marketing_promotional_price|format_price }}</span>
                     <span id="variation-price"
                        class="lead product-old-price text-muted">{{ product.marketing_price|format_price }}</span>
