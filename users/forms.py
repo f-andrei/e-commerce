@@ -7,22 +7,59 @@ from . import models
 class ProfileForm(forms.ModelForm):
     birth_date = forms.DateField(
         input_formats=['%d/%m/%Y'], 
-        widget=forms.DateInput(format='%d/%m/%Y'))
-
+        widget=forms.DateInput(format='%d/%m/%Y'),
+        label='Data de nascimento'
+        )
+        
+    cpf = forms.CharField(
+        label='CPF'
+    )
+    address = forms.CharField(
+        label='Endereço'
+    )
+    number = forms.IntegerField(
+        label='Número'
+    )
+    address_line2 = forms.CharField(
+        label='Complemento'
+    )
+    neighborhood = forms.CharField(
+        label='Bairro'
+    )
+    zipcode = forms.CharField(
+        label='CEP'
+    )
+    city = forms.CharField(
+        label='Cidade'
+    )
+    
     class Meta:
         model = models.Profile
         exclude = ('user',)
     
 
 class UserForm(forms.ModelForm):
+    first_name = forms.CharField(
+        label='Primeiro nome'
+    )
+    last_name = forms.CharField(
+        label='Ultimo nome'
+    )
+    username = forms.CharField(
+        label='Usuário'
+    )
+    email = forms.CharField(
+        label='Email'
+    )
     password = forms.CharField(
         required=False,
         widget=forms.PasswordInput(),
+        label='Senha'
     )
     password2 = forms.CharField(
         required=False,
         widget=forms.PasswordInput(),
-        label='Confirm password'
+        label='Confirmar senha'
     )
     def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
