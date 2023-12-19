@@ -5,7 +5,7 @@ from django.views import View
 from django.http import HttpResponse
 from django.contrib import messages
 from . import models
-from pprint import pprint
+from users.models import Profile
 
 # Create your views here.
 
@@ -156,5 +156,28 @@ class Cart(View):
 
 class Overview(ListView):
     def get(self, *args, **kwargs):
-        return HttpResponse('Finalizar')
+
+        if not self.request.user.is_authenticated:
+            return redirect('users:create')
+        
+        profile = Profile.objects.filter(user=self.request.user).exists()
+        if not profile:
+            messages.error(
+                self.request,
+                'Usuário faltando dados.'
+            )
+            return redirect('users:create')
+        
+        if not self.request.session.get('cart'):
+            messages.error(
+                self.request,
+                'Carrinho vazio.'
+            )
+            return redirect('products:list')
+
+        context = {
+            'user': self.request.user,
+            'cart': self.request.session['cart'],
+        }
+        return render(self.request, 'product/overview.html', context)
 
