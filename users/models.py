@@ -7,7 +7,7 @@ from utils.validate_cpf import valida_cpf
 # Create your models here.
 #TODO: Create separeted model for multiple adresses
 #TODO: Add verbose name to all models
-
+#TODO: ADD PHONE NUMBER
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Usuário')
     birth_date = models.DateField(verbose_name='Data de nascimento')

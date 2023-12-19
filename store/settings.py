@@ -135,7 +135,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join('templates/static')
+    os.path.join(BASE_DIR, 'templates/static')
 ]
 
 MEDIA_URL = '/media/'
@@ -146,7 +146,7 @@ MESSAGE_TAGS = {
     constants.DEBUG: 'alert-info',
     constants.ERROR: 'alert-danger',
     constants.INFO: 'alert-info',
-    constants.SUCCESS: 'alert-sucess',
+    constants.SUCCESS: 'alert-success',
     constants.WARNING: 'alert-warning'
 }
 
