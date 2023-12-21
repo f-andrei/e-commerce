@@ -14,7 +14,7 @@ class ListProducts(ListView):
     template_name = 'product/list.html'
     context_object_name = 'products'
     paginate_by = 10
-
+    ordering = ['-id']
 
 
 class ProductDetails(DetailView):
@@ -22,6 +22,7 @@ class ProductDetails(DetailView):
     template_name = 'product/detail.html'
     context_object_name = 'product'
     slug_url_kwarg = 'slug'
+
 
 class AddToCart(View):
     def get(self, *args, **kwargs):
@@ -153,7 +154,7 @@ class Cart(View):
         }
         return render(self.request, 'product/cart.html', context)
 
-
+#TODO: calculate shipping fee
 class Overview(ListView):
     def get(self, *args, **kwargs):
 

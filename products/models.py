@@ -17,7 +17,7 @@ class Product(models.Model):
         blank=False,
         null=False
         )
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
     marketing_price = models.FloatField(verbose_name='Preço')
     marketing_promotional_price = models.FloatField(default=0, verbose_name='Preço promocional')
     type = models.CharField(
