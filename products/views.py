@@ -216,3 +216,8 @@ class Search(ListProducts):
         self.request.session.save()
 
         return qs
+    
+
+class Home(View):
+    def get(self, *args, **kwargs):
+        return render(self.request, 'product/home.html')

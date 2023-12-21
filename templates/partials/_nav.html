@@ -1,15 +1,26 @@
 {% load filters %}
 
-<nav class="navbar navbar-dark bg-primary navbar-expand-lg">
-    <a class="navbar-brand" href="{% url 'products:list' %}">Home</a>
+<nav class="navbar navbar-dark navbar-expand-lg" id="navbar">
+    <a class="navbar-brand" href="{% url 'products:list' %}">PetPals</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link text" href="{% url 'products:home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Nossos serviços</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Quem somos</a>
+            </li>
+        </ul>
         <ul class="navbar-nav ml-auto">
-            {% if request.session.cart %}
+                {% if request.session.cart %}
                 <li class="nav-item">
                     <a class="nav-link nav-cart-link active" href="{% url 'products:cart' %}">
                         <span class="nav-cart-text mr-1">

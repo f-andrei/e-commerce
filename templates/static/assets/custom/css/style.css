@@ -1,3 +1,11 @@
+.navbar {
+    background-color: #1F497D;
+}
+
+.nav-link {
+    color: red;
+}
+
 .product-price-block {
     font-size: 1.5rem;
 }
@@ -80,4 +88,23 @@ ul.errorlist li {
 }
 .cart-img {
     max-width: 150px;
+}
+
+footer {
+    background-color: #1F497D;
+}
+
+body, h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #F5F5F5; 
+    color: #333333; 
+    font-family: 'Arial', sans-serif; 
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #1F497D; 
 }
