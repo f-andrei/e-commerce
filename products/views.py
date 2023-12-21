@@ -4,6 +4,7 @@ from django.views.generic.detail import DetailView
 from django.views import View
 from django.http import HttpResponse
 from django.contrib import messages
+from django.db.models import Q
 from . import models
 from users.models import Profile
 
@@ -23,6 +24,19 @@ class ProductDetails(DetailView):
     context_object_name = 'product'
     slug_url_kwarg = 'slug'
 
+    def get_queryset(self):
+        if 'search' in self.request.path:
+            return self.model.objects.all()
+        
+        return super().get_queryset()
+
+    def get_object(self, queryset=None):
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        
+        if queryset is None:
+            queryset = self.get_queryset()
+        
+        return get_object_or_404(queryset, slug=slug)
 
 class AddToCart(View):
     def get(self, *args, **kwargs):
@@ -182,3 +196,23 @@ class Overview(ListView):
         }
         return render(self.request, 'product/overview.html', context)
 
+
+class Search(ListProducts):
+    def get_queryset(self, *args, **kwargs):
+        term = self.request.GET.get('term') or self.request.session['term']
+        qs = super().get_queryset(*args, **kwargs)
+
+        if not term:
+            return qs
+        
+        self.request.session['term'] = term
+        
+        qs = qs.filter(
+            Q(name__icontains=term) |
+            Q(short_description__icontains=term) |
+            Q(long_description__icontains=term)
+        )
+
+        self.request.session.save()
+
+        return qs
