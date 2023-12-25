@@ -14,3 +14,7 @@ def cart_count(cart):
 @register.filter
 def cart_total(cart):
     return utils.cart_total(cart)
+
+@register.filter
+def format_long_description(description):
+    return utils.format_long_description(description)
