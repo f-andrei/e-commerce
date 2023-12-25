@@ -6,6 +6,7 @@
 
 {% block content %}
 
+{% if orders %}
 <div class="row">
     <div class="col">
         <h3 class="mb-4">Pedidos de {{ user }}</h3>
@@ -34,24 +35,20 @@
                     </td>
                 </tr>
                 {% endfor %}
-
-                <tr>
-                    <th scope="row">Pedido N. 10</td>
-                    <td>R$ 54,90</td>
-                    <td>1</td>
-                    <td>Criado</td>
-                    <td>
-                        <a href="/pedido/detalhe/10">
-                            Ver <i class="fas fa-search-plus ml-2"></i>
-                        </a>
-                    </td>
-                </tr>
-
-
             </table>
         </div>
     </div>
 </div>
+{% else %}
+<div class="row mt-3">
+    <div class="col">
+        <h3>Sua lista de pedidos está vazia.</h3>
+        <p class="lead">Você ainda não gerou nenhum pedido.</p>
+        <a class="btn btn-lg btn-block btn-primary" href="{% url 'products:list' %}">Ir às compras</a>
+    </div>
+</div>
+{% endif %}
+
 {% include 'partials/_pagination.html '%}
 
 {% endblock  %}

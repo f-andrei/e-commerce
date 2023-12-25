@@ -221,3 +221,8 @@ class Search(ListProducts):
 class Home(View):
     def get(self, *args, **kwargs):
         return render(self.request, 'product/home.html')
+    
+
+class About(View):
+    def get(self, *args, **kwargs):
+        return render(self.request, 'product/about.html')

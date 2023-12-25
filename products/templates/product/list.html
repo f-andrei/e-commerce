@@ -18,9 +18,10 @@
                 {% endif %}
                 <div class="card-body">
                     <a href="{% url 'products:product_details' product.slug %}">
-                        <h6 class="card-title text-success">{{ product.name }}</h6>
+                        <h4 class="card-title text-success">{{ product.name }}</h4>
                     </a>
-                    <h6 class="card-subtitle mb-2">{{ product.short_description }}</h6>
+                    <h5 class="card-subtitle mb-2">{{ product.short_description }}</h5>
+                    <p class="card-subtitle mb-2">{{ product.long_description|format_long_description|safe }}</p>
                     {% if product.marketing_promotional_price %}
                         <span class="product-price text-center">
                             <h4>{{ product.marketing_promotional_price|format_price }}</h4>

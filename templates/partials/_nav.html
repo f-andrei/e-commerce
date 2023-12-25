@@ -1,7 +1,7 @@
 {% load filters %}
 
 <nav class="navbar navbar-dark navbar-expand-lg" id="navbar">
-    <a class="navbar-brand" href="{% url 'products:list' %}">PetPals</a>
+    <a class="navbar-brand" href="{% url 'products:home' %}">PetPals</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -13,10 +13,10 @@
                 <a class="nav-link text" href="{% url 'products:home' %}">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Nossos serviços</a>
+                <a class="nav-link" href="{% url 'products:list' %}">Nossos serviços</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Quem somos</a>
+                <a class="nav-link" href="{% url 'products:about' %}">Quem somos</a>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
